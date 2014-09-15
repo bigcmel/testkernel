@@ -36,14 +36,18 @@ void initd_run()
     {
       initd_scheduling();
 
+
       INITD_TABLE[INITD_TOKEN].status = INITD_APP_STATUS_RUNNING;
 
 
       // 切换上下文，对应到正确的代码段
       MMU_SwitchContext( INITD_TOKEN );
       
+      Uart_SendString("Ready to app_0\n",15);
 
       initd_jmp_to_app( INITD_TOKEN );
+
+      Uart_SendString("Exit app_0\n",11);
 
       INITD_TABLE[INITD_TOKEN].status = INITD_APP_STATUS_FINISHED;
       INITD_FILL_APP_NUM--;

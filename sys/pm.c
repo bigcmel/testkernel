@@ -56,6 +56,7 @@ void pm_scheduling()
   if((( pm_ptr_initd->status == PM_PROC_STATUS_READY ) && ( pm_initd_is_empty()!=INITD_EMPTY )) || ( pm_ptr_initd->status == PM_PROC_STATUS_RUNNING ))
     {
       PM_TOKEN = PM_INITD_IDX;
+      Uart_SendString("INITD\n",6);
     }
   else
     {
@@ -66,6 +67,7 @@ void pm_scheduling()
 	      PM_TOKEN = SYS_IDX;
 	    }
 	}
+      Uart_SendString("SYS\n",4);
     }
  
   PM_TABLE[PM_TOKEN].status = PM_PROC_STATUS_RUNNING;

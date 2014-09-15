@@ -43,11 +43,7 @@ void initd_run()
       // 切换上下文，对应到正确的代码段
       MMU_SwitchContext( INITD_TOKEN );
       
-      Uart_SendString("Ready to app_0\n",15);
-
       initd_jmp_to_app( INITD_TOKEN );
-
-      Uart_SendString("Exit app_0\n",11);
 
       INITD_TABLE[INITD_TOKEN].status = INITD_APP_STATUS_FINISHED;
       INITD_FILL_APP_NUM--;
@@ -90,10 +86,23 @@ WORD initd_register_app(BYTE* app_name,
 }
 
 
-// 先不把进程调度搞得太复杂，暂且总是指向第一个进程即可
+// 先不把进程调度搞得太复杂，暂且只是遍历所有的进程，逐一轮询
 static void initd_scheduling()
 {
-  INITD_TOKEN = INITD_FIRST_APP_IDX;
+  WORD app_idx;
+  int status_tmp;
+
+  for(app_idx=INITD_FIRST_APP_IDX ; app_idx<INITD_APP_NUM ; app_idx++)
+    {
+      status_tmp = INITD_TABLE[app_idx].status;
+
+      if( status_tmp == INITD_APP_STATUS_READY )
+	{
+	  INITD_TOKEN = app_idx;
+	  break;
+	}
+    }
+
 }
 
 // 进入到被调度到的应用程序

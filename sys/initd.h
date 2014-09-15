@@ -6,7 +6,7 @@
 #include "../include/hardware_proto.h"
 
 // initd 中进程的最大数量
-#define INITD_APP_NUM 31
+#define INITD_APP_NUM 15
 #define INITD_FIRST_APP_IDX 0
 
 // 表示 initd 中当前有多少应用程序进程

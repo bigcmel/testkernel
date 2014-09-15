@@ -26,14 +26,13 @@ void __main()
   Uart_SendString("pm setup end.\n",14);
 
 
-  Uart_SendString("app_0 setup.\n",13);
-  // 载入一个应用程序，名叫 "app_0"
-
   binary_base = 0x00000000;
   binary_length = 1024;
 
   if(load_user_app_to_initd( "app_0", (BYTE*)binary_base, binary_length ))
     Uart_SendString("app_0 setup end.\n",17);
+  if(load_user_app_to_initd( "app_1", (BYTE*)binary_base, binary_length ))
+    Uart_SendString("app_1 setup end.\n",17);
 
 
   while(1) // 姑且先这样写了，不停地做调度

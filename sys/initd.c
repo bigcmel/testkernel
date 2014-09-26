@@ -20,6 +20,8 @@ void initd_setup()
   short int app_idx;
 
 
+  Uart_SendString("initd setup.\n",13);
+
   // 初始化 initd 里没有进程
   INITD_FILL_APP_NUM = INITD_EMPTY;
 

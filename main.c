@@ -38,6 +38,12 @@ void __main()
   while(1) // 姑且先这样写了，不停地做调度
     {
       pm_scheduling(); // 开始进程管理的进程调度
+      
+      if( PM_TOKEN == PM_SLEEP )
+	{
+	  Uart_SendString("NOW SLEEP.\n",11);
+	  while(1){};
+	}
     }
 
 
@@ -74,10 +80,11 @@ WORD load_user_app_to_initd( BYTE* app_name, BYTE* app_binary_base, WORD app_bin
   MMU_SwitchContext( app_idx );
 
   
-  /* 向 sys_mm 申请需要的内存空间 */
+  /* 向 sys_mm 申请需要的内存空间 
 
   if( ! sys_mm_apply_sdram(app_idx, (WORD)app_binary_base, app_binary_length) )
     return RETURN_FAILED;
+  */
 
 
   /* 调用系统调用（ SWI 中断），将代码从 SDRAM 读到内存中 

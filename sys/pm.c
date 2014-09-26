@@ -6,7 +6,7 @@ static void pm_err_handler();
 // 开始运行 pm 中拿到令牌的进程
 static void pm_run();
 
-// 得到一个 sys 进程是否申请 CPU
+// 得到 sys 进程是否申请 CPU
 static int pm_get_sys_is_apply( WORD sys_idx );
 
 // 添加一个进程项到全局进程表中
@@ -22,15 +22,23 @@ void pm_setup()
   WORD proc_idx;
 
   static PTRFUNC ptr_initd_setup = initd_setup;
-  static PTRFUNC ptr_sys_mm_setup = sys_mm_setup;
+  static PTRFUNC ptr_sys_setup = sys_setup;
+  static PTRFUNC ptr_mm_setup = mm_setup;
+  static PTRFUNC ptr_cpum_setup = cpum_setup;
 
 
   // 生成全局进程表
   pm_add_to_pm_table(PM_INITD_IDX, ptr_initd_setup);
   pm_ptr_initd = &PM_TABLE[PM_INITD_IDX]; // 为全局指针赋值，方便其他会用到该指针的地方
 
-  pm_add_to_pm_table(PM_SYS_MM_IDX, ptr_sys_mm_setup);
-  pm_ptr_sys_mm = &PM_TABLE[PM_SYS_MM_IDX];
+  pm_add_to_pm_table(PM_SYS_IDX, ptr_sys_setup);
+  pm_ptr_sys = &PM_TABLE[PM_SYS_IDX];
+
+  pm_add_to_pm_table(PM_MM_IDX, ptr_mm_setup);
+  pm_ptr_mm = &PM_TABLE[PM_MM_IDX];
+
+  pm_add_to_pm_table(PM_CPUM_IDX, ptr_cpum_setup);
+  pm_ptr_cpum = &PM_TABLE[PM_CPUM_IDX];
 
   
   // 为每一个进程执行他们自己的初始化函数
@@ -49,7 +57,6 @@ void pm_setup()
  */
 void pm_scheduling()
 {
-  static WORD SYS_IDX;
 
   PM_TOKEN = PM_SLEEP;
 
@@ -58,17 +65,17 @@ void pm_scheduling()
       PM_TOKEN = PM_INITD_IDX;
       Uart_SendString("INITD\n",6);
     }
-  else
+  else if(( pm_get_sys_is_apply(PM_SYS_IDX)==SYS_APPLY ) && ( PM_TABLE[PM_SYS_IDX].status==PM_PROC_STATUS_READY ))
     {
-      for(SYS_IDX=PM_FIRST_SYS_IDX ; SYS_IDX<PM_PROC_NUM ; SYS_IDX++)
-	{
-	  if(( pm_get_sys_is_apply(SYS_IDX)==PM_SYS_APPLY ) && ( PM_TABLE[SYS_IDX].status==PM_PROC_STATUS_READY ))
-	    {
-	      PM_TOKEN = SYS_IDX;
-	    }
-	}
+      PM_TOKEN = PM_SYS_IDX;
       Uart_SendString("SYS\n",4);
     }
+  else if(( pm_get_sys_is_apply(PM_MM_IDX)==MM_APPLY ) && ( PM_TABLE[PM_MM_IDX].status==PM_PROC_STATUS_READY ))
+    {
+      PM_TOKEN = PM_MM_IDX;
+      Uart_SendString("MM\n",3);
+    }
+ 
  
   PM_TABLE[PM_TOKEN].status = PM_PROC_STATUS_RUNNING;
   pm_run();
@@ -83,11 +90,16 @@ static void pm_run()
     case PM_INITD_IDX:
       initd_run();
       break;
-    case PM_SYS_MM_IDX:
-      sys_mm_run();
+    case PM_SYS_IDX:
+      sys_run();
+      break;
+    case PM_MM_IDX:
+      mm_run();
+      break;
+    case PM_CPUM_IDX:
+      cpum_run();
       break;
     case PM_SLEEP:
-      sys_power_sleep();
       break;
     default:
       PM_ERR_CODE = PM_ERR_UND_TOKEN;
@@ -117,10 +129,12 @@ static int pm_get_sys_is_apply( WORD sys_idx )
 {
   switch( sys_idx )
     {
-    case PM_SYS_MM_IDX:
-      return SYS_MM_IS_APPLY;
+    case PM_SYS_IDX:
+      return SYS_IS_APPLY;
+    case PM_MM_IDX:
+      return MM_IS_APPLY;
     default:
-      PM_ERR_CODE = PM_ERR_UND_SYS_IDX;
+      PM_ERR_CODE = PM_ERR_UND_TOKEN;
       pm_err_handler();
       break;
     }

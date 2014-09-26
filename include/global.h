@@ -11,8 +11,9 @@
 #define Mode_SYS 0x1F
 
 
+#define NULL 0x0
 #define RETURN_SUCCESS 1
-#define RETURN_FAILED 0
+#define RETURN_FAILED (-1)
 
 
 typedef unsigned char BYTE;
@@ -21,6 +22,19 @@ typedef unsigned long WORD; // 字，四个字节
 
 
 typedef void(*PTRFUNC)(void); // PTRFUNC 是一个指向函数的指针
+
+
+/* sys 服务的相关参数 */
+
+#define SYS_REGISTER_TABLE_BASE 0x31100000
+#define SYS_REGISRER_TABLE_LIMIT 0x00100000
+
+#define SYS_CODE_BASE 0x31200000
+#define SYS_CODE_LIMIT 0x00C00000
+
+#define SYS_SHARE_RAM_BASE 0x31E00000
+#define SYS_SHARE_RAM_LIMIT 0x00100000
+
 
 
 #endif

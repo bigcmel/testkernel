@@ -28,9 +28,11 @@ NANSLKERNELELF	= kernel.elf
 OBJS		= $(OBJ-FILES-PATH)/startup.o $(OBJ-FILES-PATH)/main.o \
 		$(OBJ-FILES-PATH)/nand_flash.o $(OBJ-FILES-PATH)/uart.o  \
 		$(OBJ-FILES-PATH)/exception_handlers.o $(OBJ-FILES-PATH)/pm.o \
-		$(OBJ-FILES-PATH)/initd.o $(OBJ-FILES-PATH)/sys_mm.o \
+		$(OBJ-FILES-PATH)/initd.o $(OBJ-FILES-PATH)/sys.o \
 		$(OBJ-FILES-PATH)/sys_power.o $(OBJ-FILES-PATH)/APP_Handler.o \
-		$(OBJ-FILES-PATH)/SWI_Handler.o $(OBJ-FILES-PATH)/memory.o 
+		$(OBJ-FILES-PATH)/SWI_Handler.o $(OBJ-FILES-PATH)/memory.o \
+		$(OBJ-FILES-PATH)/mm.o $(OBJ-FILES-PATH)/cpum.o \
+		$(OBJ-FILES-PATH)/sys_S.o
 LIBS		= $(LIB-FILES-PATH)/syscall.lib
 DASMOUTPUT	= kernel.bin.asm
 
@@ -83,7 +85,7 @@ $(OBJ-FILES-PATH)/pm.o: $(SYS-FILES-PATH)/pm.c
 $(OBJ-FILES-PATH)/initd.o: $(SYS-FILES-PATH)/initd.c
 	$(CC) $(CFLAGS) -o $@ $<
 
-$(OBJ-FILES-PATH)/sys_mm.o: $(SYS-FILES-PATH)/sys_mm.c
+$(OBJ-FILES-PATH)/sys.o: $(SYS-FILES-PATH)/sys.c
 	$(CC) $(CFLAGS) -o $@ $<
 
 $(OBJ-FILES-PATH)/sys_power.o: $(SYS-FILES-PATH)/sys_power.c
@@ -98,8 +100,18 @@ $(OBJ-FILES-PATH)/SWI_Handler.o: $(SYS-FILES-PATH)/SWI_Handler.c
 $(OBJ-FILES-PATH)/syscall.o: $(SYS-FILES-PATH)/syscall.S
 	$(ASM) $(ASMFLAGS) -o $@ $<
 
+$(OBJ-FILES-PATH)/mm.o: $(SYS-FILES-PATH)/mm.c
+	$(CC) $(CFLAGS) -o $@ $<
+
+$(OBJ-FILES-PATH)/cpum.o: $(SYS-FILES-PATH)/cpum.c
+	$(CC) $(CFLAGS) -o $@ $<
+
 $(OBJ-FILES-PATH)/memory.o:  $(HARDWARE-PATH)/memory.c
 	$(CC) $(CFLAGS) -o $@ $<
+
+$(OBJ-FILES-PATH)/sys_S.o: $(SYS-FILES-PATH)/sys.S
+	$(ASM) $(ASMFLAGS) -o $@ $<
+
 
 
 $(LIB-FILES-PATH)/syscall.lib: $(LIB-FILES-PATH)/src/syscall.S

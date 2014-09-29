@@ -1,4 +1,5 @@
 #include "sys.h"
+#include "sys_serv_funcs.h"
 
 
 static WORD sys_get_empty_idx()
@@ -34,7 +35,6 @@ static WORD sys_recv_result();
 void sys_setup()
 {
   int i;
-  WORD serv_idx;
 
 
   Uart_SendString("sys setup.\n",11);
@@ -48,7 +48,8 @@ void sys_setup()
     }
 
   // 开始注册所有的 sys 服务，相关的宏参数都定义在头文件中
-  serv_idx = sys_register_serv(SERV_UART_CODE_SEG_BASE, SERV_UART_CODE_SEG_LIMIT, SERV_UART_PARA_SEG_BASE); // 注册串口服务
+  SERV_UART_IDX = sys_register_serv(SERV_UART_CODE_SEG_BASE, SERV_UART_CODE_SEG_LIMIT, SERV_UART_PARA_SEG_BASE); // 注册串口服务,SERV_UART_IDX 定义在 sys_serv_funcs.h 中  
+
 
   // 初始化 sys 不需要申请 CPU
   SYS_IS_APPLY = SYS_UNAPPLY;

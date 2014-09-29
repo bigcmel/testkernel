@@ -32,7 +32,7 @@ OBJS		= $(OBJ-FILES-PATH)/startup.o $(OBJ-FILES-PATH)/main.o \
 		$(OBJ-FILES-PATH)/sys_power.o $(OBJ-FILES-PATH)/APP_Handler.o \
 		$(OBJ-FILES-PATH)/SWI_Handler.o $(OBJ-FILES-PATH)/memory.o \
 		$(OBJ-FILES-PATH)/mm.o $(OBJ-FILES-PATH)/cpum.o \
-		$(OBJ-FILES-PATH)/sys_S.o
+		$(OBJ-FILES-PATH)/sys_S.o $(OBJ-FILES-PATH)/sys_serv_funcs.o
 LIBS		= $(LIB-FILES-PATH)/syscall.lib
 DASMOUTPUT	= kernel.bin.asm
 
@@ -111,6 +111,9 @@ $(OBJ-FILES-PATH)/memory.o:  $(HARDWARE-PATH)/memory.c
 
 $(OBJ-FILES-PATH)/sys_S.o: $(SYS-FILES-PATH)/sys.S
 	$(ASM) $(ASMFLAGS) -o $@ $<
+
+$(OBJ-FILES-PATH)/sys_serv_funcs.o: $(SYS-FILES-PATH)/sys_serv_funcs.c
+	$(CC) $(CFLAGS) -o $@ $<
 
 
 

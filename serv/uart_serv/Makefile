@@ -24,7 +24,8 @@ DASMFLAGS	= -D -b binary -m arm
 # This Program
 SERV		= $(SERV_NAME).bin
 SERVELF		= $(SERV_NAME).elf
-OBJS		= $(OBJ-FILES-PATH)/serv_startup.o $(OBJ-FILES-PATH)/main.o $(OBJ-FILES-PATH)/serv_uart_funcs.o
+OBJS		= $(OBJ-FILES-PATH)/serv_startup.o $(OBJ-FILES-PATH)/main.o \
+	   	$(OBJ-FILES-PATH)/serv_uart_funcs.o $(OBJ-FILES-PATH)/serv_global.o
 #LIBS		= $(LIB-FILES-PATH)/syscall.lib
 DASMOUTPUT	= $(SERV_NAME).bin.asm
 
@@ -63,4 +64,7 @@ $(OBJ-FILES-PATH)/serv_startup.o: ../serv_startup.S
 	$(ASM) $(ASMFLAGS) -o $@ $<
 
 $(OBJ-FILES-PATH)/serv_uart_funcs.o: serv_uart_funcs.c
+	$(CC) $(CFLAGS) -o $@ $<
+
+$(OBJ-FILES-PATH)/serv_global.o: ../serv_global.c
 	$(CC) $(CFLAGS) -o $@ $<

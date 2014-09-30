@@ -25,7 +25,7 @@ void __main()
   pm_setup();
   Uart_SendString("pm setup end.\n",14);
 
-  sys_serv_uart_SendString("serv uart test success.\n", 24);
+  serv_uart_SendString("serv uart test success.\n", 24);
 
   binary_base = 0x00000000;
   binary_length = 1024;
@@ -41,10 +41,8 @@ void __main()
       pm_scheduling(); // 开始进程管理的进程调度
       
       if( PM_TOKEN == PM_SLEEP )
-	{
-	  Uart_SendString("NOW SLEEP.\n",11);
-	  while(1){};
-	}
+	  sys_power_sleep();
+
     }
 
 

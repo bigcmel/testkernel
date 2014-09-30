@@ -22,7 +22,7 @@ void pm_setup()
   WORD proc_idx;
 
   static PTRFUNC ptr_initd_setup = initd_setup;
-  static PTRFUNC ptr_sys_setup = sys_setup;
+  static PTRFUNC ptr_serv_setup = serv_setup;
   static PTRFUNC ptr_mm_setup = mm_setup;
   static PTRFUNC ptr_cpum_setup = cpum_setup;
 
@@ -31,8 +31,8 @@ void pm_setup()
   pm_add_to_pm_table(PM_INITD_IDX, ptr_initd_setup);
   pm_ptr_initd = &PM_TABLE[PM_INITD_IDX]; // 为全局指针赋值，方便其他会用到该指针的地方
 
-  pm_add_to_pm_table(PM_SYS_IDX, ptr_sys_setup);
-  pm_ptr_sys = &PM_TABLE[PM_SYS_IDX];
+  pm_add_to_pm_table(PM_SERV_IDX, ptr_serv_setup);
+  pm_ptr_serv = &PM_TABLE[PM_SERV_IDX];
 
   pm_add_to_pm_table(PM_MM_IDX, ptr_mm_setup);
   pm_ptr_mm = &PM_TABLE[PM_MM_IDX];
@@ -65,10 +65,10 @@ void pm_scheduling()
       PM_TOKEN = PM_INITD_IDX;
       Uart_SendString("INITD\n",6);
     }
-  else if(( pm_get_sys_is_apply(PM_SYS_IDX)==SYS_APPLY ) && ( PM_TABLE[PM_SYS_IDX].status==PM_PROC_STATUS_READY ))
+  else if(( pm_get_sys_is_apply(PM_SERV_IDX)==SERV_APPLY ) && ( PM_TABLE[PM_SERV_IDX].status==PM_PROC_STATUS_READY ))
     {
-      PM_TOKEN = PM_SYS_IDX;
-      Uart_SendString("SYS\n",4);
+      PM_TOKEN = PM_SERV_IDX;
+      Uart_SendString("SERV\n",5);
     }
   else if(( pm_get_sys_is_apply(PM_MM_IDX)==MM_APPLY ) && ( PM_TABLE[PM_MM_IDX].status==PM_PROC_STATUS_READY ))
     {
@@ -90,8 +90,8 @@ static void pm_run()
     case PM_INITD_IDX:
       initd_run();
       break;
-    case PM_SYS_IDX:
-      sys_run();
+    case PM_SERV_IDX:
+      serv_run();
       break;
     case PM_MM_IDX:
       mm_run();
@@ -129,8 +129,8 @@ static int pm_get_sys_is_apply( WORD sys_idx )
 {
   switch( sys_idx )
     {
-    case PM_SYS_IDX:
-      return SYS_IS_APPLY;
+    case PM_SERV_IDX:
+      return SERV_IS_APPLY;
     case PM_MM_IDX:
       return MM_IS_APPLY;
     default:

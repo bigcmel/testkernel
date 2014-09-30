@@ -4,11 +4,11 @@
 #include "../include/global.h"
 #include "../include/hardware_proto.h"
 #include "initd.h"
-#include "sys.h"
+#include "serv.h"
 #include "mm.h"
 #include "cpum.h"
 
-// 两个进程：initd，sys，mm，cpum
+// 4个进程：initd，serv，mm，cpum
 #define PM_PROC_NUM 4
 
 // 在 PM 中的进程的三种状态
@@ -33,14 +33,14 @@ WORD PM_TOKEN;
 
 // 进程表中每一项进程对应的索引
 #define PM_INITD_IDX 0
-#define PM_SYS_IDX 1
+#define PM_SERV_IDX 1
 #define PM_MM_IDX 2
 #define PM_CPUM_IDX 3
 #define PM_SLEEP 9
 
 // 指向各个 sys 进程的全局指针
 ptr_pm_node pm_ptr_initd;
-ptr_pm_node pm_ptr_sys;
+ptr_pm_node pm_ptr_serv;
 ptr_pm_node pm_ptr_mm;
 ptr_pm_node pm_ptr_cpum;
 

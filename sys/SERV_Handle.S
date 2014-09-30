@@ -3,8 +3,8 @@
 	.TEXT
 	.ARM
 	
-	.GLOBL  sys_jmp_to_serv_asm
-sys_jmp_to_serv_asm:
+	.GLOBL  __SERV_S_jmp_to_serv
+__SERV_S_jmp_to_serv:
 
 		STR	LR,	LR_BACKUP_ADDR
 

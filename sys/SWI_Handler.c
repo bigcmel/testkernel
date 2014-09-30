@@ -1,5 +1,4 @@
 #include "../include/global.h"
-#include "../include/hardware_proto.h"
 
 
 void C_SWI_Handler( WORD number, WORD* reg )
@@ -13,14 +12,11 @@ void C_SWI_Handler( WORD number, WORD* reg )
     {
     case 0: // 进入特权模式，已进入，所以这里什么都不做
       break;
-    case 1: // 从 nand flash 读
-      (*ptr_param_0) = NF_ReadPage( *ptr_param_0, *ptr_param_1, (BYTE*)(*ptr_param_2) );
+    case 1: // 送出参数到共享内存，用以提供给 serv
+      serv_send_para_and_idx(*ptr_param_0, *ptr_param_1, *ptr_param_2, *ptr_param_3);
       break;
-    case 2: // 往 nand flash 写
-      (*ptr_param_0) = NF_WritePage( *ptr_param_0, *ptr_param_1, (BYTE*)(*ptr_param_2) );
-      break;
-    case 3: // 往串口打印字符串
-      Uart_SendString( (BYTE*)(*ptr_param_0), *ptr_param_1 );
+    case 2: // 运行 serv 并得到返回值
+      (*ptr_param_0) = serv_run();
       break;
     default: // 无效的 SWI 号时执行的代码
       break;

@@ -23,8 +23,6 @@ void pm_setup()
 
   static PTRFUNC ptr_initd_setup = initd_setup;
   static PTRFUNC ptr_serv_setup = serv_setup;
-  static PTRFUNC ptr_mm_setup = mm_setup;
-  static PTRFUNC ptr_cpum_setup = cpum_setup;
 
 
   // 生成全局进程表
@@ -33,12 +31,6 @@ void pm_setup()
 
   pm_add_to_pm_table(PM_SERV_IDX, ptr_serv_setup);
   pm_ptr_serv = &PM_TABLE[PM_SERV_IDX];
-
-  pm_add_to_pm_table(PM_MM_IDX, ptr_mm_setup);
-  pm_ptr_mm = &PM_TABLE[PM_MM_IDX];
-
-  pm_add_to_pm_table(PM_CPUM_IDX, ptr_cpum_setup);
-  pm_ptr_cpum = &PM_TABLE[PM_CPUM_IDX];
 
   
   // 为每一个进程执行他们自己的初始化函数
@@ -65,16 +57,6 @@ void pm_scheduling()
       PM_TOKEN = PM_INITD_IDX;
       Uart_SendString("INITD\n",6);
     }
-  else if(( pm_get_sys_is_apply(PM_SERV_IDX)==SERV_APPLY ) && ( PM_TABLE[PM_SERV_IDX].status==PM_PROC_STATUS_READY ))
-    {
-      PM_TOKEN = PM_SERV_IDX;
-      Uart_SendString("SERV\n",5);
-    }
-  else if(( pm_get_sys_is_apply(PM_MM_IDX)==MM_APPLY ) && ( PM_TABLE[PM_MM_IDX].status==PM_PROC_STATUS_READY ))
-    {
-      PM_TOKEN = PM_MM_IDX;
-      Uart_SendString("MM\n",3);
-    }
  
  
   PM_TABLE[PM_TOKEN].status = PM_PROC_STATUS_RUNNING;
@@ -89,15 +71,6 @@ static void pm_run()
     {
     case PM_INITD_IDX:
       initd_run();
-      break;
-    case PM_SERV_IDX:
-      serv_run();
-      break;
-    case PM_MM_IDX:
-      mm_run();
-      break;
-    case PM_CPUM_IDX:
-      cpum_run();
       break;
     case PM_SLEEP:
       break;
@@ -125,20 +98,6 @@ static int pm_initd_is_empty()
   return INITD_FILL_APP_NUM;
 }
 
-static int pm_get_sys_is_apply( WORD sys_idx )
-{
-  switch( sys_idx )
-    {
-    case PM_SERV_IDX:
-      return SERV_IS_APPLY;
-    case PM_MM_IDX:
-      return MM_IS_APPLY;
-    default:
-      PM_ERR_CODE = PM_ERR_UND_TOKEN;
-      pm_err_handler();
-      break;
-    }
-}
 
 static void pm_err_handler()
 {}

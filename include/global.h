@@ -24,7 +24,7 @@ typedef unsigned long WORD; // 字，四个字节
 typedef void(*PTRFUNC)(void); // PTRFUNC 是一个指向函数的指针
 
 
-/* sys 服务的相关参数 */
+/* serv 服务的相关参数 */
 
 #define SERV_REGISTER_TABLE_BASE 0x31100000
 #define SERV_REGISRER_TABLE_LIMIT 0x00100000

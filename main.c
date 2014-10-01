@@ -25,7 +25,7 @@ void __main()
   pm_setup();
   Uart_SendString("pm setup end.\n",14);
 
-  serv_uart_SendString("serv uart test success.\n", 24);
+  //  serv_uart_SendString("serv uart test success.\n", 24);
 
   binary_base = 0x00000000;
   binary_length = 1024;

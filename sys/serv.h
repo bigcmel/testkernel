@@ -2,10 +2,8 @@
 #define __SERV_H__
 
 #include "../include/global.h"
+#include "pm.h"
 
-
-// 记录 sys 服务的数量
-int SERV_NUM;
 
 // sys 服务数量的最大值
 #define SERV_MAX_NUM 99
@@ -24,12 +22,13 @@ typedef struct serv_table
   WORD CODE_SEG_BASE;  // 代码段基地址
   WORD CODE_SEG_LIMIT; // 代码段长度
   WORD PARA_SEG_BASE;  // 共享数据段基地址，不用写共享数据段的长度，因为长度指定为 3 个WORD
+  WORD SERV_STATUS;    // serv 当前的状态
 }SERV_TABLE, *ptr_serv_table;
 
 // 指向当前要执行的 sys 服务表项
 ptr_serv_table PTR_SERV_TABLE;
 
-#define SERV_TABLE_LEN 12 // 一个该结构体占 12 个字节
+#define SERV_TABLE_LEN 16 // 一个该结构体占 16 个字节
 
 
 // 描述一个在共享数据区中的 sys 服务的表项
@@ -46,28 +45,14 @@ ptr_serv_para PTR_SERV_PARA;
 #define SERV_PARA_LEN 12 // 一个该结构体占 12 个字节
 
 
-// 描述一个 sys 服务
-typedef struct serv
-{
-  WORD idx;
-  int status;
-}SERV, *ptr_serv;
-
 // 注册了所有的 sys 服务的全局表
-SERV SERV_GLOBAL_TABLE[SERV_MAX_NUM];
+ptr_serv_table SERV_GLOBAL_TABLE;
 
-// 指向当前需要执行的 sys 服务
+// 指向当前锁定的 sys 服务
 WORD SERV_IDX;
 
 // 表示未定义的 sys 服务索引，通常表示当前没有 sys 服务需要执行
 #define SERV_UND_IDX 100
-
-
-// 表示 sys 是否需要申请cpu
-int SERV_IS_APPLY;
-
-#define SERV_APPLY 1
-#define SERV_UNAPPLY 0
 
 
 // 记录最近发生错误的错误码
@@ -81,8 +66,6 @@ extern void serv_setup();
 
 extern WORD serv_run();
 
-extern WORD serv_register_serv(WORD code_seg_base, WORD code_seg_limit, WORD para_seg_base);
-
 extern void serv_send_para(WORD operation_code, WORD para_base, WORD para_num);
 
 extern void serv_send_para_and_idx(WORD serv_idx, WORD operation_code, WORD para_base, WORD para_num);
@@ -94,10 +77,11 @@ extern void __SERV_S_jmp_to_serv(WORD serv_code_seg_base); // 定义于 sys.S
 #define SERV_RETURN_OPT 0x0
 
 
-// Uart 服务注册在表中的相关信息
-#define SERV_UART_CODE_SEG_BASE 0x31200000
-#define SERV_UART_CODE_SEG_LIMIT 0x00004000
-#define SERV_UART_PARA_SEG_BASE 0x31E00000
+#define SERV_SERVM_IDX 0
+// servm 服务注册在表中的相关信息
+#define SERV_SERVM_CODE_SEG_BASE 0x31200000
+#define SERV_SERVM_CODE_SEG_LIMIT 0x00004000
+#define SERV_SERVM_PARA_SEG_BASE 0x31E00000
 
 
 #endif

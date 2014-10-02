@@ -56,12 +56,13 @@ void pm_scheduling()
     {
       PM_TOKEN = PM_INITD_IDX;
       Uart_SendString("INITD\n",6);
+
+      PM_TABLE[PM_TOKEN].status = PM_PROC_STATUS_RUNNING;
+      pm_run();
+      PM_TABLE[PM_TOKEN].status = PM_PROC_STATUS_READY;
     }
  
- 
-  PM_TABLE[PM_TOKEN].status = PM_PROC_STATUS_RUNNING;
   pm_run();
-  PM_TABLE[PM_TOKEN].status = PM_PROC_STATUS_READY;
 }
 
 

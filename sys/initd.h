@@ -31,13 +31,13 @@ typedef struct initd_node
   BYTE name[INITD_APP_NAME_LENGTH]; // 进程名
   WORD name_length; // 进程名长度
   WORD idx; // 进程索引值
-  int status; // 进程所处的状态
+  WORD status; // 进程所处的状态
   BYTE* binary_base; // 二进制代码在内存中的起始地址
   WORD binary_length; // 二进制代码的长度，以字节为单位
 }INITD_NODE, *ptr_initd_node;
 
 // initd 的全局进程表
-INITD_NODE INITD_TABLE[INITD_APP_NUM];
+ptr_initd_node INITD_TABLE;
 
 
 // initd 中应用程序进程的各种状态

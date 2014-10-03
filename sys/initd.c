@@ -22,6 +22,8 @@ void initd_setup()
 
   Uart_SendString("initd setup.\n",13);
 
+  INITD_TABLE = (ptr_initd_node)INITD_REGISTER_TABLE_BASE;
+
   // 初始化 initd 里没有进程
   INITD_FILL_APP_NUM = INITD_EMPTY;
 
@@ -138,7 +140,7 @@ static WORD initd_get_empty_idx()
 static void initd_clean_finished_app()
 {
   WORD app_idx;
-  int* status_tmp;
+  WORD* status_tmp;
 
   for(app_idx=INITD_FIRST_APP_IDX ; app_idx<INITD_APP_NUM ; app_idx++)
     {

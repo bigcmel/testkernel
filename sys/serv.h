@@ -2,7 +2,6 @@
 #define __SERV_H__
 
 #include "../include/global.h"
-#include "pm.h"
 
 
 // sys 服务数量的最大值

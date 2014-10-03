@@ -32,8 +32,8 @@ void __main()
 
   if(load_user_app_to_initd( "app_0", (BYTE*)binary_base, binary_length ))
     Uart_SendString("app_0 setup end.\n",17);
-  if(load_user_app_to_initd( "app_1", (BYTE*)binary_base, binary_length ))
-    Uart_SendString("app_1 setup end.\n",17);
+  //  if(load_user_app_to_initd( "app_1", (BYTE*)binary_base, binary_length ))
+  //    Uart_SendString("app_1 setup end.\n",17);
 
 
   while(1) // 姑且先这样写了，不停地做调度
@@ -69,7 +69,7 @@ WORD load_user_app_to_initd( BYTE* app_name, BYTE* app_binary_base, WORD app_bin
   /* 先注册 initd 的进程表 */
 
   app_binary_base = 0x00000000;
-  app_binary_length = 1024;
+  app_binary_length = 4096;
 
   app_idx = initd_register_app(app_name, app_binary_base, app_binary_length);
 

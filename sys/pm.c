@@ -62,7 +62,6 @@ void pm_scheduling()
       PM_TABLE[PM_TOKEN].status = PM_PROC_STATUS_READY;
     }
  
-  pm_run();
 }
 
 
